@@ -1,0 +1,21 @@
+<html lang="en">
+
+<head>
+  <script src="js/camera.js"></script>
+</head>
+
+<body>
+  <h1>WebEye #1</h1>
+  <canvas id='c1' width=640 height=480></canvas>
+  <script>
+  var camIP = location.hash.substring(1);
+  var cam = new Camera('http://' + camIP + '/jpg');
+  cam.setRotateCam(90);
+  cam.onCanvas('c1', function (c) {
+  	//...
+  });
+  </script>
+</body>
+
+</html>
+
