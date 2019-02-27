@@ -41,10 +41,13 @@
   var imageClassifier;
   var hServo;
   var vServo;
-  var data = location.hash.substring(1).split('/');
-  boardReady({ board: 'Smart', device: data[1], transport: 'mqtt' }, function (board) {
+  //https://marty5499.github.io/WebEye/index.html#remotecam.webduino.io/camera/ylWjzxAnK/live/nJ3Em
+  var data = location.hash.substring(1);
+  var deviceID = data.substring(data.lastIndexOf('/') + 1);
+  var camURL = data.substring(0, data.lastIndexOf('/') - 1);
+  boardReady({ board: 'Smart', device: deviceID, transport: 'mqtt' }, function (board) {
     board.samplingInterval = 50;
-    var cam = new Camera("http://"+data[0]);
+    var cam = new Camera("http://" + camURL);
     cam.setRotateCam(90);
     cam.onCanvas('qq');
     hServo = getServo(board, 2);
