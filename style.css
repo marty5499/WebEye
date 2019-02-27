@@ -107,8 +107,9 @@ body {
 }
 
 .display {
+  position: absolute;
   display: block;
-  margin-left: -80px;
+  margin-left: auto;
   margin-right: auto;
   width: 420px;
   height: 320px;
