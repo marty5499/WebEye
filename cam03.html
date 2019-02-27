@@ -20,6 +20,7 @@
   tracking.setCvProcess(filter);
 
   tracking.inside(function (pos) {
+    console.log("物件位置，大小",pos);
     tracking.setStroke(3, "#00FF00");
   });
 
