@@ -108,7 +108,8 @@ body {
 
 .display {
   display: block;
-  text-align: center;
+  margin-left: -80px;
+  margin-right: auto;
   width: 420px;
   height: 320px;
 }
