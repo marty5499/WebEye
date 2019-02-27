@@ -44,7 +44,7 @@
   //https://marty5499.github.io/WebEye/index.html#remotecam.webduino.io/camera/ylWjzxAnK/live/nJ3Em
   var data = location.hash.substring(1);
   var deviceID = data.substring(data.lastIndexOf('/') + 1);
-  var camURL = data.substring(0, data.lastIndexOf('/') - 1);
+  var camURL = data.substring(0, data.lastIndexOf('/'));
   boardReady({ board: 'Smart', device: deviceID, transport: 'mqtt' }, function (board) {
     board.samplingInterval = 50;
     var cam = new Camera("http://" + camURL);
