@@ -108,10 +108,9 @@ body {
 
 .display {
   display: block;
-  margin-left: -45px;
   margin-right: auto;
-  width: calc(100% - 20px);
-  height: 400px;
+  width: 420px;
+  height: 320px;
 }
 
 .demo-area-09-btn.btn-range {
