@@ -14,14 +14,11 @@
 </head>
 
 <body>
+  <canvas id='qq' width='640px' height='480px' class='display'></canvas>
   <div>
     <div id="demo-area-09" class="da">
       <div id="demo-area-09-content">
         <div id="demo-area-09-controller">
-          <div class="demo-area-09-btn btn-power">○</div>
-          <div class="demo-area-09-btn btn-show">顯示</div>
-          <canvas id='qq' class="display"></canvas>
-          <div style='height:320px'></div>
           <input type="range" min="0" max="180" step="5" value="90" class="demo-area-09-input">
           <div class="demo-area-09-btn-group btn-direction-group">
             <div class="demo-area-09-btn btn-up">▲</div>
@@ -47,7 +44,7 @@
   boardReady({ board: 'Smart', device: deviceID, transport: 'mqtt' }, function (board) {
     board.samplingInterval = 50;
     var cam = new Camera("http://" + camURL);
-    cam.setRotateCam(90);
+    cam.setRotate(90);
     cam.onCanvas('qq');
     hServo = getServo(board, 2);
     vServo = getServo(board, 5);
@@ -55,9 +52,9 @@
 
     vServo.angle = 90;
     hServo.angle = 90;
-    setTimeout(function(){
+    setTimeout(function () {
       vServo.angle = 45;
-    },500);
+    }, 500);
     controllerBtnEvent(getElement('#demo-area-09 .btn-up'), 'click', function () {
       vServo.angle -= 5;
     });
