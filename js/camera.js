@@ -3,22 +3,15 @@ let Camera = (function () {
   const wsCam = 1;
   const jpgCam = 2;
   const imgStreamCam = 3;
-  /*
-    var cam = new Camera(0); // camType 0 , 1 , 2 ...
-    // get jpeg from url
-    var cam = new Camera('http://192.168.0.11/jpg');
-    // use raspberryPi camera (rws service)
-    var cam = new Camera('ws://192.168.43.110:8889/rws/ws'); 
 
-    cam.onCanvas('c1', function (c) {
-      console.log("canvas:", c);
-    });
-  */
   class Camera {
     // webCam: 0,1,2
     // jpgCam: http://192.168.0.11/jpg
     // wsCam:  ws://192.168.43.110:8889/rws/ws
     constructor(camType) {
+      if (arguments.length == 0) {
+        camType = 0;
+      }
       this.setCamType(camType);
       this.setFlip(false);
     }
@@ -51,12 +44,20 @@ let Camera = (function () {
       this.flip = bool;
     }
 
-    enumerateDevices() {
+    list(callback) {
+      var self = this;
+      this.enumerateDevices(function () {
+        callback(self.cameraList);
+      });
+    }
+
+    enumerateDevices(cb) {
       var self = this;
       return new Promise(function (resolve, reject) {
         navigator.mediaDevices.enumerateDevices()
           .then(function (o) {
             self.gotDevices(self, o);
+            if (cb) cb();
             resolve();
           }).catch(self.handleError);
       });
@@ -136,7 +137,7 @@ let Camera = (function () {
         this.URL = this.URL.substring(0, param);
       }
       image.src = this.URL;
-      console.log("camSnapshotDelay:",camSnapshotDelay);
+      console.log("camSnapshotDelay:", camSnapshotDelay);
       image.onload = function () {
         setTimeout(function () {
           if (typeof callback == 'function') {
@@ -163,7 +164,7 @@ let Camera = (function () {
                 ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight,
                   0, 0, canvas.width, canvas.height);
                 if (typeof callback == 'function') {
-                  callback(canvas);
+                  callback(canvas, video);
                 }
                 requestAnimationFrame(loop);
               }
@@ -186,16 +187,18 @@ let Camera = (function () {
           case imgStreamCam:
             var ele = document.createElement('img');
             ele.src = self.URL;
-            //ele.setAttribute("crossOrigin", 'Anonymous');
+            ele.setAttribute("crossOrigin", 'Anonymous');
             ele.style.display = 'none';
             document.getElementsByTagName("body")[0].append(ele);
             var ctx = canvas.getContext('2d');
             var loop = function () {
-             // ctx.drawImage(ele, 0, 0, ele.width, ele.height,0, 0, canvas.width, canvas.height);
-             self.drawRotated(canvas, ele, self.rotate);
-              if (typeof callback == 'function') {
-                callback(canvas, ele);
-              }
+              // ctx.drawImage(ele, 0, 0, ele.width, ele.height,0, 0, canvas.width, canvas.height);
+              try {
+                self.drawRotated(canvas, ele, self.rotate);
+                if (typeof callback == 'function') {
+                  callback(canvas);
+                }
+              } catch (e) { console.log("img err:", e) };
               requestAnimationFrame(loop);
             }
             requestAnimationFrame(loop);
