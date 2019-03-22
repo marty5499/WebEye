@@ -230,9 +230,15 @@ let Camera = (function () {
       context.rotate(degrees * Math.PI / 180);
       var w = (canvas.width - image.width) / 2;
       var h = (canvas.height - image.height) / 2;
-      context.drawImage(image,
-        (-image.width / 2) - w, (-image.height / 2) - h,
-        canvas.width, canvas.height);
+      if (degrees != 0) {
+        context.drawImage(image,
+          (-image.height / 2) - h, (-image.width / 2) - w,
+          canvas.height, canvas.width);
+      } else {
+        context.drawImage(image,
+          (-image.width / 2) - w, (-image.height / 2) - h,
+          canvas.width, canvas.height);
+      }
       context.restore();
     }
 
