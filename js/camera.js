@@ -38,10 +38,12 @@ let Camera = (function () {
 
     setRotate(bool) {
       this.rotate = bool;
+      return this;
     }
 
     setFlip(bool) {
       this.flip = bool;
+      return this;
     }
 
     list(callback) {
@@ -135,9 +137,10 @@ let Camera = (function () {
       if (param > 0) {
         camSnapshotDelay = parseFloat(this.URL.substring(param + 1)) * 1000;
         this.URL = this.URL.substring(0, param);
+      } else {
+        camSnapshotDelay = camSnapshotDelay * 1000;
       }
       image.src = this.URL;
-      console.log("camSnapshotDelay:", camSnapshotDelay);
       image.onload = function () {
         setTimeout(function () {
           if (typeof callback == 'function') {
@@ -205,6 +208,7 @@ let Camera = (function () {
             break;
         }
       });
+      return this;
     }
 
     toVideo(eleOrId) {
