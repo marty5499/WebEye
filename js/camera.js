@@ -183,7 +183,7 @@ let Camera = (function () {
               //ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
               self.drawRotated(canvas, img, self.rotate);
               if (typeof callback == 'function') {
-                callback(canvas);
+                callback(canvas,ele);
               }
             });
             break;
@@ -199,7 +199,7 @@ let Camera = (function () {
               try {
                 self.drawRotated(canvas, ele, self.rotate);
                 if (typeof callback == 'function') {
-                  callback(canvas);
+                  callback(canvas,ele);
                 }
               } catch (e) { console.log("img err:", e) };
               requestAnimationFrame(loop);

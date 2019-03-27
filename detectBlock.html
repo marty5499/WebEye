@@ -14,17 +14,9 @@
   <canvas id='c1' width=320 height=240></canvas>
   <canvas id='c2' width=320 height=240 debugger></canvas>
   <script>
-  var hot = new HotBlock('c1'/*, 'c2'*/);
-  var cam = new Camera('http://webduino.tw/view/cam23').setRotate(90);
-  hot.addBlock({
-    "id": "b1",
-    "area": [10, 10, 110, 110],
-    "history": 300,
-    "varThreshold": 150,
-    "detectShadows": false,
-    "objMinSize": 3,
-    "filter": ["e1", "d1"]
-  }, {
+  var hot = new HotBlock('c1' /*, 'c2'*/ );
+  var cam = new Camera(0).setRotate(90);
+  hot.setBlock([10, 10, 110, 110], {
     inside: function (pos) {
       var c = document.getElementById("c1");
       var ctx = c.getContext("2d");
