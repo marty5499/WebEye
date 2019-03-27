@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <script src="../js/waspot.js"></script>
+  <script src="../js/opencv.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+</head>
+
+<body>
+  <h1>Hotspot section detect</h1>
+  <canvas id='c1' width=320 height=240></canvas>
+  <canvas id='c2' width=320 height=240 debugger></canvas>
+  <script>
+  var hot = new HotBlock('c1'/*, 'c2'*/);
+  var cam = new Camera('http://webduino.tw/view/cam23').setRotate(90);
+  hot.addBlock({
+    "id": "b1",
+    "area": [10, 10, 110, 110],
+    "history": 300,
+    "varThreshold": 150,
+    "detectShadows": false,
+    "objMinSize": 3,
+    "filter": ["e1", "d1"]
+  }, {
+    inside: function (pos) {
+      var c = document.getElementById("c1");
+      var ctx = c.getContext("2d");
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, pos.radius, 0, 2 * Math.PI);
+      ctx.stroke();
+      this.setStroke(3, "#00FF00");
+    },
+    outside: function (pos) {
+      this.setStroke(3, "#FF0000");
+    }
+  });
+
+  hot.startAfter(500);
+  cam.onCanvas('c1', function (canvas) {
+    hot.scan();
+  });
+  </script>
+</body>
+
+</html>
