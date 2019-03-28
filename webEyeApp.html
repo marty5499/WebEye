@@ -1,0 +1,120 @@
+<!doctype html>
+<meta name="robots" content="noindex">
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Camera</title>
+  <script src="https://blocklypro.webduino.io/components/jquery/dist/jquery.min.js?rev=4a356126b9573eb7bd1e9a7494737410"></script>
+  <script src="https://blocklypro.webduino.io/dist/lib/webduino-all-0.4.20.min.js?rev=4426739c00d85325cb2d3d701fa50666"></script>
+  <script src="https://blocklypro.webduino.io/dist/webduino-blockly.min.js?rev=6a9037f813da79372168951bbfeafb49"></script>
+  <script src="js/camera.js"></script>
+  <link rel='stylesheet' type='text/css' href='style.css' />
+</head>
+
+<body>
+  <canvas id='qq' width='320px' height='480px' class='display'></canvas>
+  <div>
+    <div id="demo-area-09" class="da">
+      <div id="demo-area-09-content">
+        <div id="demo-area-09-controller">
+          <input type="range" min="0" max="180" step="5" value="90" class="demo-area-09-input">
+          <div class="demo-area-09-btn-group btn-direction-group">
+            <div class="demo-area-09-btn btn-up">▲</div>
+            <br>
+            <div class="demo-area-09-btn btn-left">◀</div>
+            <div class="demo-area-09-btn btn-center">●</div>
+            <div class="demo-area-09-btn btn-right">▶</div>
+            <br>
+            <div class="demo-area-09-btn btn-down">▼</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+  var imageClassifier;
+  var hServo;
+  var vServo;
+  //https://marty5499.github.io/WebEye/index.html#remotecam.webduino.io/camera/ylWjzxAnK/live/nJ3Em
+  var param = location.hash.substring(1).split('@');
+  var deviceID = param[0];
+  var camURL = param[1];
+  console.log("deviceID:", deviceID);
+  console.log("camURL:", camURL);
+  boardReady({ board: 'Smart', device: deviceID, transport: 'mqtt' }, function (board) {
+    board.samplingInterval = 50;
+    var cam = new Camera(camURL);
+    cam.setRotate(90);
+    cam.onCanvas('qq');
+    hServo = getServo(board, 2);
+    vServo = getServo(board, 5);
+    var p;
+
+    vServo.angle = 90;
+    hServo.angle = 90;
+    setTimeout(function () {
+      vServo.angle = 45;
+    }, 500);
+    controllerBtnEvent(getElement('#demo-area-09 .btn-up'), 'click', function () {
+      vServo.angle -= 5;
+    });
+
+    controllerBtnEvent(getElement('#demo-area-09 .btn-down'), 'click', function () {
+      vServo.angle += 5;
+    });
+    controllerBtnEvent(getElement('#demo-area-09 .btn-left'), 'click', function () {
+      hServo.angle += 5;
+    });
+
+    controllerBtnEvent(getElement('#demo-area-09 .btn-right'), 'click', function () {
+      hServo.angle -= 5;
+    });
+
+    controllerBtnEvent(getElement('#demo-area-09 .btn-center'), 'click', function () {
+      hServo.angle = 90;
+      vServo.angle = 90;
+    });
+
+    var range = document.querySelector('.demo-area-09-input');
+    range.setAttribute('min', 0);
+    range.setAttribute('max', 180);
+    range.setAttribute('step', 1);
+    range.setAttribute('value', 90);
+    p = Math.round((90 - 0) * 100 / (180 - 0));
+    range.style.backgroundImage = '-webkit-linear-gradient(left, #246 0%, #246 ' + p + '%, #222 ' + p + '%, #222 100%)';
+
+    range.oninput = function () {
+      var _value = this.value;
+      p = Math.round((_value - 0) * 100 / (180 - 0));
+      range.style.backgroundImage = '-webkit-linear-gradient(left, #246 0%, #246 ' + p + '%, #222 ' + p + '%, #222 100%)';
+      hServo.angle = (180 - _value);
+    };
+  });
+
+  function getElement(dom) {
+    var element = document.querySelector(dom);
+    return element;
+  }
+
+  function controllerBtnEvent(c, e, callback) {
+    if (e !== 'click') {
+      var _u = navigator.userAgent;
+      if (_u.indexOf('Android') > -1 || _u.indexOf('iPhone') > -1 || _u.indexOf('iPad') > -1) {
+        c.addEventListener(e[1], function () {
+          callback();
+        });
+      } else {
+        c.addEventListener(e[0], function () {
+          callback();
+        });
+      }
+    } else {
+      c.addEventListener('click', function () {
+        callback();
+      });
+    }
+  }
+  </script>
+</body>

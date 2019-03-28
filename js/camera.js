@@ -183,7 +183,7 @@ let Camera = (function () {
               //ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
               self.drawRotated(canvas, img, self.rotate);
               if (typeof callback == 'function') {
-                callback(canvas,ele);
+                callback(canvas, ele);
               }
             });
             break;
@@ -196,12 +196,10 @@ let Camera = (function () {
             var ctx = canvas.getContext('2d');
             var loop = function () {
               // ctx.drawImage(ele, 0, 0, ele.width, ele.height,0, 0, canvas.width, canvas.height);
-              try {
-                self.drawRotated(canvas, ele, self.rotate);
-                if (typeof callback == 'function') {
-                  callback(canvas,ele);
-                }
-              } catch (e) { console.log("img err:", e) };
+              self.drawRotated(canvas, ele, self.rotate);
+              if (typeof callback == 'function') {
+                callback(canvas, ele);
+              }
               requestAnimationFrame(loop);
             }
             requestAnimationFrame(loop);
@@ -226,24 +224,28 @@ let Camera = (function () {
     }
 
     drawRotated(canvas, image, degrees) {
-      degrees = this.rotate ? 90 : 0;
-      var context = canvas.getContext('2d');
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      context.save();
-      context.translate(canvas.width / 2, canvas.height / 2);
-      context.rotate(degrees * Math.PI / 180);
-      var w = (canvas.width - image.width) / 2;
-      var h = (canvas.height - image.height) / 2;
-      if (degrees != 0) {
-        context.drawImage(image,
-          (-image.height / 2) - h, (-image.width / 2) - w,
-          canvas.height, canvas.width);
-      } else {
-        context.drawImage(image,
-          (-image.width / 2) - w, (-image.height / 2) - h,
-          canvas.width, canvas.height);
+      try {
+        degrees = this.rotate ? 90 : 0;
+        var context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.save();
+        context.translate(canvas.width / 2, canvas.height / 2);
+        context.rotate(degrees * Math.PI / 180);
+        var w = (canvas.width - image.width) / 2;
+        var h = (canvas.height - image.height) / 2;
+        if (degrees != 0) {
+          context.drawImage(image,
+            (-image.height / 2) - h, (-image.width / 2) - w,
+            canvas.height, canvas.width);
+        } else {
+          context.drawImage(image,
+            (-image.width / 2) - w, (-image.height / 2) - h,
+            canvas.width, canvas.height);
+        }
+        context.restore();
+      } catch (e) {
+        console.log("drawImage err:", e);
       }
-      context.restore();
     }
 
     buttonTrigger(ele, callback) {
@@ -266,6 +268,5 @@ let Camera = (function () {
       }
     }
   }
-
   return Camera;
 })();

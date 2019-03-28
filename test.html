@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="../js/camera.js"></script>
+  <style>
+    input {
+  		font-size:1.2em;
+  		margin:5px;
+  	}
+  	button {
+	  background-color: #4CAF50; /* Green */
+	  border: none;
+	  color: white;
+	  text-align: center;
+	  text-decoration: none;
+	  display: inline-block;
+	  font-size: 1.2em
+	}
+  </style>
+</head>
+
+<body>
+  在同網域下，請輸入WebEye 編號進行測試
+  <br>
+  <input id='camId' type='text' value='9999'>
+  <button onclick="connect()">Connect</button>
+  <br>
+  <div id='msg'></div>
+  <br>
+  <canvas id='c1' width=320 height=240></canvas>
+  <script>
+  var cam;
+  var camId = document.getElementById('camId');
+  camId.focus();
+
+  function connect() {
+    cam = new Camera('http://cam' + camId.value + '.local:81/stream');
+    cam.setRotate(90);
+    cam.onCanvas('c1');
+  }
+  </script>
+</body>
+
+</html>

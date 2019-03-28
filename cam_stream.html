@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="../js/camera.js"></script>
+</head>
+
+<body>
+  <canvas id='c1' width=480 height=640></canvas>
+  <script>
+  var cam = new Camera('http://cam23.local:81/stream');
+  cam.setRotate(90);
+  cam.onCanvas('c1');
+  </script>
+</body>
+
+</html>
